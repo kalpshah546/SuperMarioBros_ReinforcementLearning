@@ -4,7 +4,7 @@ Training script for Super Mario Bros PPO agent
 
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import CheckpointCallback
-
+import os
 from mario import ImpalaCNN, create_experiment_folder, make_mario_env
 
 if __name__ == "__main__":
@@ -73,5 +73,10 @@ if __name__ == "__main__":
         tb_log_name="mario_PPO",
         progress_bar=True,
     )
+
+    # Save the final model and vec_normalize
+    model.save(os.path.join(model_dir, "final_model.zip"))
+    vec_path = os.path.join(model_dir, "vec_normalize.pkl")
+    train_env.save(vec_path)
 
     train_env.close()

@@ -3,14 +3,14 @@ Continue training from checkpoint for Super Mario Bros PPO agent
 """
 
 import os
-
+from stable_baselines3.common.vec_env import VecNormalize
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import CheckpointCallback
 
 from mario import make_mario_env
 
 if __name__ == "__main__":
-    checkpoint_path = "results\ppo\exp_ks_1-1-2\models\checkpoints\mario_PPO_KS_10700000_steps.zip"
+    checkpoint_path = r"results\ppo\exp1\models\checkpoints\mario_PPO_400000_steps.zip"
 
     exp_dir = os.path.dirname(os.path.dirname(os.path.dirname(checkpoint_path)))
     model_dir = os.path.join(exp_dir, "models")
@@ -18,12 +18,12 @@ if __name__ == "__main__":
 
     # Random environment with all 32 stages (default: World 1-8, all 4 stages per world)
     train_env = make_mario_env(
-        "SuperMarioBrosRandomStages-v0",
-        n_envs=8,
+        "SuperMarioBros-1-1-v3",
+        n_envs=4,
         wrapper_kwargs={
             "frame_skip": 4,
             "screen_size": 84,
-            "use_single_stage_episodes": False,
+            "use_single_stage_episodes": True,
             "noop_max": 80,
         },
         vec_normalize_kwargs={
@@ -36,13 +36,16 @@ if __name__ == "__main__":
         },
         monitor_dir=f"{log_dir}/train",
     )
-
+    vec_path = os.path.join(model_dir, "vec_normalize.pkl")
+    if os.path.exists(vec_path):
+        train_env = VecNormalize.load(vec_path, train_env)
+    else:
+        print(f"Warning: {vec_path} not found. Using new VecNormalize.")
+    train_env.training = True
     model = PPO.load(checkpoint_path, env=train_env)
 
-    model.target_kl = 0.02
-    model.ent_coef = 0.05
 
-    model.batch_size = 2048
+    model.batch_size = 512
 
     model.tensorboard_log = os.path.join(log_dir, "tensorboard")
 
@@ -58,7 +61,7 @@ if __name__ == "__main__":
         callback=[checkpoint_callback],
         tb_log_name="mario_PPO",
         progress_bar=True,
-        reset_num_timesteps=True,
+        reset_num_timesteps=False,
     )
 
     train_env.close()
