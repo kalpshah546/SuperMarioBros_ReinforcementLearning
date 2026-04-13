@@ -57,7 +57,7 @@ if __name__ == "__main__":
     )
 
     model.learn(
-        total_timesteps=1e7,
+        total_timesteps=1000000,
         callback=[checkpoint_callback],
         tb_log_name="mario_PPO",
         progress_bar=True,

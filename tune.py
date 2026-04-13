@@ -132,7 +132,7 @@ def objective(trial):
         verbose=0,
     )
 
-    model.learn(total_timesteps=5e5, progress_bar=True)
+    model.learn(total_timesteps=500000, progress_bar=True)
 
     reward, _ = evaluate_policy(model, test_env, n_eval_episodes=1, deterministic=True)
 

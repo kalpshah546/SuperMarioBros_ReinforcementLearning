@@ -9,7 +9,7 @@ from stable_baselines3 import PPO
 from mario import evaluate_policy, make_mario_env
 
 if __name__ == "__main__":
-    checkpoint_path = "results/ppo/exp1/models/checkpoints/mario_PPO_100000_steps"
+    checkpoint_path = r"C:\Users\admin\Desktop\mario_bmp\SuperMarioBros_ReinforcementLearning\results\ppo\exp5\models\checkpoints\mario_PPO_1200000_steps"
 
     path_parts = os.path.normpath(checkpoint_path).split(os.sep)
     if "results" in path_parts and "ppo" in path_parts:

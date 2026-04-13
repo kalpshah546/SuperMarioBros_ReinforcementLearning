@@ -2,15 +2,24 @@
 Training script for Super Mario Bros PPO agent
 """
 
+import os
+
+import torch
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import CheckpointCallback
-import os
 from mario import ImpalaCNN, create_experiment_folder, make_mario_env
 
+
 if __name__ == "__main__":
+    print("PyTorch CUDA available:", torch.cuda.is_available())
+    if torch.cuda.is_available():
+        print("CUDA device:", torch.cuda.get_device_name(0))
+
     # Create experiment folder
     exp_num, exp_dir, model_dir, log_dir, _ = create_experiment_folder()
-
+    print("Experiment dir:", exp_dir)
+    print("Model dir:", model_dir)
+    print("Log dir:", log_dir)
     # Create training environment
     train_env = make_mario_env(
         "SuperMarioBros-1-1-v0",
@@ -65,10 +74,12 @@ if __name__ == "__main__":
         ),
         verbose=0,
         tensorboard_log=f"{log_dir}/tensorboard",
+        device="cuda" if torch.cuda.is_available() else "cpu",
     )
 
+    print("Using device:", model.device)
     model.learn(
-        total_timesteps=1e7,
+        total_timesteps=10000000,
         callback=[checkpoint_callback],
         tb_log_name="mario_PPO",
         progress_bar=True,

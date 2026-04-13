@@ -49,7 +49,7 @@ class ImpalaCNN(BaseFeaturesExtractor):
         self,
         observation_space: gym.Space,
         features_dim: int = 256,
-        channels: list = None,
+        channels: list[int] | None = None,
         normalized_image: bool = False,
     ) -> None:
         if channels is None:
