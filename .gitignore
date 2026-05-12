@@ -82,16 +82,7 @@ Thumbs.db
 CLAUDE.md
 claude.md
 
-# Results and logs
-results/
-logs/
-*.log
 
-# Model files
-*.zip
-*.pkl
-*.pth
-*.onnx
 
 # Video files
 *.mp4
